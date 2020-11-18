@@ -1,19 +1,16 @@
-const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
-
-// import routes
-const postRoutes = require('./routes/post');
-const authRoutes = require('./routes/auth');
-// app
+const cors = require('cors');
 const app = express();
+require('dotenv').config();
+var skills_route = require('./skills/skills_controller');
+var projects_route = require('./projects/projects_controller');
+var blogs_route = require('./blogs/blogs_controller');
 
-// db
 mongoose
-    .connect(process.env.DATABASE, {
+    .connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
@@ -23,13 +20,16 @@ mongoose
     .catch(err => console.log(err));
 
 // middlewares
+app.disable('etag');
 app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(express.static('dist'));
 
 // route middleware
-app.use('/api', postRoutes);
-app.use('/api', authRoutes);
+app.use("/api/projects", projects_route);
+app.use("/api/skills", skills_route);
+app.use("/api/blogs", blogs_route);
 
 // port
 const port = process.env.PORT || 8000;
