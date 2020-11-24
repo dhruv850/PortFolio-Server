@@ -8,9 +8,11 @@ require('dotenv').config();
 var skills_route = require('./skills/skills_controller');
 var projects_route = require('./projects/projects_controller');
 var blogs_route = require('./blogs/blogs_controller');
+var testimonials_route = require('./testimonials/testimonial_controller');
+const URI = require('./config')
 
 mongoose
-    .connect(process.env.MONGO_URI, {
+    .connect(URI.MONGO_URI, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
@@ -30,6 +32,7 @@ app.use(express.static('dist'));
 app.use("/api/projects", projects_route);
 app.use("/api/skills", skills_route);
 app.use("/api/blogs", blogs_route);
+app.use("/api/testimonials",testimonials_route);
 
 // port
 const port = process.env.PORT || 8000;
